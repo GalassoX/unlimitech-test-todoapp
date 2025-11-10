@@ -27,13 +27,12 @@ export async function getTasks(req: Request, res: Response): Promise<void> {
 }
 
 export async function createTask(req: Request, res: Response): Promise<void> {
-  const { title, description, dueDate, status } = req.body;
+  const { title, description, status } = req.body;
 
   const newTask = await TaskModel.create({
     userId: new mongoose.Types.ObjectId(res.locals.userId as string),
     title,
     description,
-    dueDate,
     status
   });
 
@@ -45,7 +44,7 @@ export async function createTask(req: Request, res: Response): Promise<void> {
 
 export async function updateTask(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
-  const { title, description, dueDate, status } = req.body;  
+  const { title, description, status } = req.body;  
 
   if (!isValidObjectId(id)) {
     responseError(res, {
@@ -65,7 +64,6 @@ export async function updateTask(req: Request, res: Response): Promise<void> {
     const taskNewData = {
       title,
       description,
-      dueDate,
       status,
       updatedAt: new Date()
     };

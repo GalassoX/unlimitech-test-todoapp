@@ -13,7 +13,6 @@ router.get('/api/v1/tasks', getTasks);
 const createTaskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  dueDate: z.string().optional(),
   status: z.number().optional(),
 });
 
@@ -22,8 +21,7 @@ router.post('/api/v1/tasks', validateRequest(createTaskSchema), createTask);
 const updateTaskSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  dueDate: z.string().optional(),
-  status: z.number().optional(),
+  status: z.boolean().optional(),
 });
 
 router.put('/api/v1/tasks/:id', validateRequest(updateTaskSchema), updateTask);
