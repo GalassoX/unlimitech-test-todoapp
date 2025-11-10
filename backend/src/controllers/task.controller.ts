@@ -15,7 +15,15 @@ export async function getTasks(req: Request, res: Response): Promise<void> {
     : { userId };
   const tasks = await TaskModel.find(filter);
 
-  responseSuccess(res, { data: tasks });
+  if (!tasks.length && id) {
+    responseError(res, {
+      statusCode: HttpStatus.NOT_FOUND,
+      error: ERROR_MESSAGES.TASK_NOT_FOUND
+    });
+    return;
+  }
+
+  responseSuccess(res, { data: id ? tasks.at(0) : tasks });
 }
 
 export async function createTask(req: Request, res: Response): Promise<void> {
@@ -81,7 +89,7 @@ export async function updateTask(req: Request, res: Response): Promise<void> {
     responseError(res, {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       error: ERROR_MESSAGES.GENERIC_ERROR
-    });    
+    });
   }
 }
 
