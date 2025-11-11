@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  # Servicio MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: todoapp-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: todoapp
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - todoapp-network
+
+  # Servicio Backend (API REST)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: todoapp-backend
+    restart: always
+    environment:
+      # Variables de conexión MongoDB
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017
+      MONGODB_USERNAME: admin
+      MONGODB_PASSWORD: admin123
+      MONGODB_DATABASE: todoapp
+      # Configuración de seguridad
+      BCRYPT_SALT_ROUNDS: 12
+      JWT_SECRET: tu_secreto_jwt_seguro_aqui_cambiar_en_produccion
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - todoapp-network
+
+  # Servicio Frontend (React + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args: 
+        VITE_API_URL: http://localhost:3000
+    container_name: todoapp-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - todoapp-network
+
+volumes:
+  # Volumen persistente para MongoDB
+  mongodb_data:
+    driver: local
+
+networks:
+  # Red compartida entre servicios
+  todoapp-network:
+    driver: bridge
