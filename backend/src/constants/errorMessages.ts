@@ -30,5 +30,9 @@ export const ERROR_MESSAGES = {
   TASK_NOT_FOUND: {
     code: 1007,
     message: 'Task not found'
+  },
+  ACCOUNT_NOT_FOUND: {
+    code: 1008,
+    message: 'Something happened to your account, please log in again'
   }
 }
