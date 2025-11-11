@@ -1,6 +1,8 @@
 import { loadEnvFile } from "node:process";
 
-loadEnvFile(".env");
+if (process.env.NODE_ENV === 'local') {
+  loadEnvFile(".env");
+}
 
 export function getEnvVariable(key: string): string {
   const value = process.env[key];

@@ -9,13 +9,13 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-    "types": [],
+    "types": ["jest", "node"],
 
     // Other Outputs
     "sourceMap": false,
     "declaration": false,
     "declarationMap": false,
-    "preserveConstEnums": false,
+    "preserveConstEnums": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,

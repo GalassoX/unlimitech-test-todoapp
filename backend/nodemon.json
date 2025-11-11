@@ -5,5 +5,8 @@
   "exec": "node -r tsconfig-paths/register -r ts-node/register src/index.ts",
   "legacyWatch": true,
   "delay": "1000",
-  "polling": true
+  "polling": true,
+  "env": {
+    "NODE_ENV": "local"
+  }
 }

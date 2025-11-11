@@ -83,7 +83,6 @@ export async function updateTask(req: Request, res: Response): Promise<void> {
       data: taskUpdated?.toJSON()
     });
   } catch (error) {
-    console.log(error);
     responseError(res, {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       error: ERROR_MESSAGES.GENERIC_ERROR
