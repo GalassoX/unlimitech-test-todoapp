@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 
 class UserStore {
-  private _user!: User;
+  private _user: User | undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -11,7 +11,7 @@ class UserStore {
     this._user = data;
   }
 
-  public get user(): User {
+  public get user(): User | undefined {
     return this._user;
   }
   

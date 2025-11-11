@@ -23,3 +23,10 @@ interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+type OnSubmitTask = {
+  title: string;
+  description?: string;
+  status: boolean;
+  task?: Task;
+}

@@ -2,6 +2,7 @@ import { makeAutoObservable, observable } from "mobx";
 
 class TaskStore {
   private _tasks: Task[] = observable([]);
+  private _currentTask: Task | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,6 +18,14 @@ class TaskStore {
 
   public get taskPendingCount(): number {
     return this._tasks.filter(task => !task.status).length;
+  }
+
+  public setCurrentTask(task: Task | null): void {
+    this._currentTask = task;
+  }
+
+  public get currentTask(): Task | null {
+    return this._currentTask;
   }
   
 }

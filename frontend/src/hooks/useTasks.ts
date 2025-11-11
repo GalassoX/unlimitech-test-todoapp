@@ -1,9 +1,8 @@
 import { getTasks } from "@/services/tasks";
 import { useEffect, useState } from "react";
-import { useStores } from "./useStores";
+import { taskStore } from "@/stores/taskStore";
 
 export function useTasks() {
-  const { taskStore } = useStores();
   const [isGettingTasks, setIsGettingTasks] = useState<boolean>(true);
 
   useEffect(() => {

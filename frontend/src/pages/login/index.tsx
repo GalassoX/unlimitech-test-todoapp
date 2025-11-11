@@ -10,7 +10,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 
 export default function Login() {
-  const [isValidUser, setIsValidUser] = useState<boolean>(true);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -24,21 +24,20 @@ export default function Login() {
     if (!username || !password) return;
 
     setIsLoadingLogin(true);
-    const status = await login({ 
-      username: username.toString(),
-      password: password.toString()
-    });
-
-    if (status) {
+    try {
+      await login({ 
+        username: username.toString(),
+        password: password.toString()
+      });
+      setIsLoadingLogin(false);
       navigate(ROUTES.TASKS);
+    } catch (error: any) {
+      setIsLoadingLogin(false);
+      setLoginError(error.message);
+      setTimeout(() => {
+        setLoginError(null);
+      }, 4000);
     }
-
-    setIsLoadingLogin(false);
-
-    setIsValidUser(status);
-    setTimeout(() => {
-      setIsValidUser(true);
-    }, 4000);
   }
 
   return (
@@ -52,10 +51,10 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!isValidUser ?
+            {loginError ?
               <Alert className="mb-6 bg-red-100 border-red-400" variant='destructive'>
                 <AlertCircleIcon />
-                <AlertTitle>Usuario o contraseña inválido</AlertTitle>
+                <AlertTitle>{loginError}</AlertTitle>
               </Alert>
             : null}
             <div className="flex flex-col gap-6">

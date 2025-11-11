@@ -3,26 +3,25 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useStores } from "@/hooks/useStores";
-import { createTask, getTasks, updateTask } from "@/services/tasks";
 import { useCallback, useRef, useState, type FormEvent } from "react";
-import { toast } from "sonner";
 
-type ComponentProps = { children: React.ReactNode; task?: Task; };
+type ComponentProps = { 
+  task?: Task;
+  onSubmit: (data: OnSubmitTask) => void;
+  open: boolean;
+  setOpen: (state: boolean) => void;
+};
 
-export function EditableTask({ children, task }: ComponentProps) {
+export function EditableTask({ task, onSubmit, open, setOpen }: ComponentProps) {
 
   const [isTaskChanged, setIsTaskChanged] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [titleError, setTitleError] = useState(false);
-  const { taskStore } = useStores();
   const taskFormRef = useRef<HTMLFormElement>(null);
 
   const checkIsTaskChangedFn = useCallback(() => {
@@ -39,16 +38,6 @@ export function EditableTask({ children, task }: ComponentProps) {
       || task.description !== formData.get('description')?.toString());
   }, []);
 
-  const updateTaskState = async () => {
-    const tasks = await getTasks();
-    if (!tasks.length) {
-      toast.error('Error obteniendo las tareas, intentalo más tarde.');
-      return;
-    }
-    
-    taskStore.setTasks(tasks);
-  }
-
   const onSubmitForm = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -60,41 +49,11 @@ export function EditableTask({ children, task }: ComponentProps) {
 
     if (!title) return;
 
-    if (task) {
-      const taskEdited = await updateTask(task._id, {
-        title,
-        status,
-        description,
-      });
-  
-      if (!taskEdited) {
-        toast.error('Ocurrió un error actualizando la tarea, intentalo más tarde.');
-        return;
-      }
-  
-      toast.info('Tarea actualizada correctamente.');
-    } else {
-      const newTask = await createTask({
-        title,
-        status,
-        description
-      });
-    
-      if (!newTask) {
-        toast.error('Ocurrió un error creando la tarea, intentalo más tarde.');
-        return;
-      }
-  
-      toast.info('Tarea creada correctamente.');
-    }
-
-    setIsDialogOpen(false);
-    await updateTaskState();
+    onSubmit({ task, title, description, status });
   }
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent >
         <DialogTitle>Tarea</DialogTitle>
         <DialogDescription></DialogDescription>
