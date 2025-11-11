@@ -13,7 +13,7 @@ router.get('/api/v1/tasks', getTasks);
 const createTaskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  status: z.number().optional(),
+  status: z.boolean().optional(),
 });
 
 router.post('/api/v1/tasks', validateRequest(createTaskSchema), createTask);
