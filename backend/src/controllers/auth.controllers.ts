@@ -69,3 +69,11 @@ export async function loginController(req: Request, res: Response): Promise<void
     message: CONSTANTS.LOGIN_SUCCESS_MESSAGE
   });
 }
+
+export async function logoutController(req: Request, res: Response): Promise<void> {
+  res.clearCookie(CONSTANTS.COOKIE_SESSION_NAME);
+
+  responseSuccess(res, {
+    message: CONSTANTS.LOGOUT_SUCCESS_MESSAGE
+  })
+}

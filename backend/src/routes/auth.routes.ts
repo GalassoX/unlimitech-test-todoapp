@@ -1,4 +1,5 @@
-import { loginController, signupController } from '@/controllers/auth.controllers';
+import { loginController, logoutController, signupController } from '@/controllers/auth.controllers';
+import { isAuthenticated } from '@/middleware/isAuthenticated';
 import { validateRequest } from '@/middleware/validateRequest';
 import { Router } from 'express';
 import { z } from 'zod';
@@ -18,5 +19,7 @@ const userLoginSchema = z.object({
 });
 
 router.post('/api/v1/auth/login', validateRequest(userLoginSchema), loginController);
+
+router.post('/api/v1/auth/logout', isAuthenticated, logoutController);
 
 export default router;
